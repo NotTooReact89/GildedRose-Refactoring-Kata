@@ -33,10 +33,26 @@ export class GildedRose {
     item.sellIn -= 1;
   };
 
+  // Dedicated function as there are multiple scenarios to cover
+  private updateBackstagePassQuality = (item: Item): void => {
+    if (item.sellIn < 0) {
+      item.quality = 0;
+    } else if (item.sellIn < 6) {
+      this.increaseQuality(item, 3);
+    } else if (item.sellIn < 11) {
+      this.increaseQuality(item, 2);
+    } else {
+      this.increaseQuality(item, 1);
+    }
+  };
+
   private updateQualityForItem = (item: Item): void => {
     switch (item.name) {
       case "Aged Brie":
         this.increaseQuality(item, 1);
+        break;
+      case "Backstage passes to a TAFKAL80ETC concert":
+        this.updateBackstagePassQuality(item);
         break;
       case "Conjured":
         this.decreaseQuality(item, 2);
