@@ -1,9 +1,39 @@
-import { Item, GildedRose } from '@/gilded-rose';
+import { Item, GildedRose } from "@/gilded-rose";
 
-describe('Gilded Rose', () => {
-  it('should foo', () => {
-    const gildedRose = new GildedRose([new Item('foo', 0, 0)]);
+describe("Gilded Rose", () => {
+  it("should decrease quality and sellIn for normal items", () => {
+    const gildedRose = new GildedRose([new Item("normal item", 10, 20)]);
     const items = gildedRose.updateQuality();
-    expect(items[0].name).toBe('fixme');
+    expect(items[0].quality).toBe(19);
+    expect(items[0].sellIn).toBe(9);
+  });
+
+  it('"Sulfuras" should never decrease in quality or sellIn', () => {
+    const gildedRose = new GildedRose([
+      new Item("Sulfuras, Hand of Ragnaros", 10, 80),
+    ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(80);
+    expect(items[0].sellIn).toBe(10);
+  });
+
+  it('should increase the quality of "Aged Brie" over time', () => {
+    const gildedRose = new GildedRose([new Item("Aged Brie", 10, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(21);
+    expect(items[0].sellIn).toBe(9);
+  });
+
+  it("should not increase the quality of an item over 50", () => {
+    const gildedRose = new GildedRose([new Item("Aged Brie", 10, 50)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(50);
+  });
+
+  it('should degrade "Conjured" items quality twice as fast as normal items', () => {
+    const gildedRose = new GildedRose([new Item("Conjured", 10, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(18);
+    expect(items[0].sellIn).toBe(9);
   });
 });
