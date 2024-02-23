@@ -62,6 +62,22 @@ export class GildedRose {
     }
   };
 
+  private handleExpired = (item: Item): void => {
+    switch (item.name) {
+      case "Aged Brie":
+        this.increaseQuality(item, 1); // Continue to increase quality by 1 even after expiration
+        break;
+      case "Backstage passes to a TAFKAL80ETC concert":
+        item.quality = 0; // Quality drops to 0 after the concert
+        break;
+      case "Conjured":
+        this.decreaseQuality(item, 2); // "Conjured" items degrade twice as fast, so double the degradation post-expiration
+        break;
+      default:
+        this.decreaseQuality(item, 1); // Normal items degrade twice as fast post-expiration
+    }
+  };
+
   updateQuality = (): Item[] => {
     this.items.forEach((item) => {
       if (item.name === "Sulfuras, Hand of Ragnaros") {
@@ -70,6 +86,10 @@ export class GildedRose {
 
       this.updateSellIn(item);
       this.updateQualityForItem(item);
+
+      if (item.sellIn < 0) {
+        this.handleExpired(item);
+      }
     });
 
     return this.items;

@@ -52,4 +52,11 @@ describe("Gilded Rose", () => {
     items = gildedRose.updateQuality();
     expect(items[0].quality).toBe(26);
   });
+
+  it("should decrease quality of normal item twice as fast once the sell by date has passed", () => {
+    const gildedRose = new GildedRose([new Item("normal item", 0, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(18);
+    expect(items[0].sellIn).toBe(-1);
+  });
 });
