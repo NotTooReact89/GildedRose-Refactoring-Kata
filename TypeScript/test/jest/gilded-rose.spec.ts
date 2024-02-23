@@ -59,4 +59,20 @@ describe("Gilded Rose", () => {
     expect(items[0].quality).toBe(18);
     expect(items[0].sellIn).toBe(-1);
   });
+
+  it('should increate quality of "Aged Brie" twice as fast once the sell by date has passed', () => {
+    const gildedRose = new GildedRose([new Item("Aged Brie", 0, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(22);
+    expect(items[0].sellIn).toBe(-1);
+  });
+
+  it('should drop the quality of "Backstage passes" to 0 once the sell by date has passed', () => {
+    const gildedRose = new GildedRose([
+      new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20),
+    ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).toBe(0);
+    expect(items[0].sellIn).toBe(-1);
+  });
 });
